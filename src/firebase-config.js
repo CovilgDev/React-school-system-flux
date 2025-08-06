@@ -17,15 +17,15 @@ import {
     getDoc
 } from 'firebase/firestore';
 
-// CRIAR VARIAVEL DE AMBIENTE PRA CHAVE API
+
 const firebaseConfig = {
-    apiKey: "AIzaSyDfn_yDbh-muAGRGRQRZdPr4RpDtUD-iZ0",
-    authDomain: "sistema-escola-renascer.firebaseapp.com",
-    projectId: "sistema-escola-renascer",
-    storageBucket: "sistema-escola-renascer.firebasestorage.app",
-    messagingSenderId: "357845611781",
-    appId: "1:357845611781:web:0023ee32f83a121a8eb36c",
-    measurementId: "G-9M6TKRJK2Y"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENTID
 };
 
 // Inicialização do Firebase

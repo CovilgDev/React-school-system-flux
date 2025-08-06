@@ -542,7 +542,7 @@ const RegisterStudent = () =>{
                             </div>
                         </div>
                     </div>
-        
+
                     {/* Renderização condicional da seção do responsável */}
                     {showResponsibleInfo && (
                         <>
@@ -561,7 +561,7 @@ const RegisterStudent = () =>{
                                     <input type="text" /* ... */ />
                                 </div>
                             </div>
-                            {/* Se necessário, adicione a lógica para o Responsável 2 aqui */}
+                            {/* POSTERIOMENTE ADICIONAR LOGICA PRA ADICIONAR RESPONSAVEIS */}
                         </>
                     )}
                 </section>
