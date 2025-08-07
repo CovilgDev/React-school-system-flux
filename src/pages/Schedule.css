@@ -1,0 +1,100 @@
+.schedule-container {
+    padding: 20px;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden; /* Garante que os cantos arredondados sejam aplicados */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.schedule-table th, .schedule-table td {
+    border: 1px solid #e0e0e0;
+    padding: 8px;
+    text-align: center;
+}
+
+.schedule-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    color: #333;
+}
+
+.time-header {
+    width: 60px; /* Largura fixa para a coluna de horários */
+}
+
+.time-cell {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    color: #555;
+}
+
+.class-cell-wrapper {
+    position: relative;
+    height: 60px; /* Altura de cada célula */
+}
+
+.class-cell {
+    background-color: #e0f7fa; /* Cor de fundo da aula */
+    border-radius: 4px;
+    padding: 5px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.class-info {
+    text-align: center;
+}
+
+.class-cell strong {
+    font-size: 0.9em;
+}
+
+.class-cell small {
+    font-size: 0.8em;
+    color: #666;
+}
+
+.call-list-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.8em;
+    margin-top: 5px;
+}
+
+.schedule-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.class-cell-wrapper {
+  vertical-align: top; 
+  border: 1px solid #ddd;
+}
+
+.class-cell {
+  background-color: #e6f7ff;
+  border-radius: 8px;
+  padding: 10px;
+  height: 100%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.class-info {
+  margin-bottom: 10px;
+}
