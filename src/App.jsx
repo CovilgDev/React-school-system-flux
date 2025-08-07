@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Layout from './components/Layout';
 import RegisterStudent from './pages/RegisterStudent';
 import './App.css';
+import ManageStudents from './pages/ManageStudents';
 
 function App(){
     return (
@@ -10,8 +11,9 @@ function App(){
             <Layout>
                 <Routes>
                     {/* Rotas */}
-                    <Route path='/cadastro-de-alunos' element={<RegisterStudent />} />
                     <Route path='/' element={<Home />} />
+                    <Route path='/cadastro-de-alunos' element={<RegisterStudent />} />
+                    <Route path='/gerenciar-alunos' element={<ManageStudents />} />
                 </Routes>
             </Layout>
         </Router>

@@ -11,7 +11,7 @@ const Layout = ({ children }) => {
                     <ul>
                         <li><Link to="/">Inicio</Link></li>
                         <li><Link to="/cadastro-de-alunos">Cadastro de Alunos</Link></li>
-                        <li><Link to="/">Gerenciamento de Alunos</Link></li>
+                        <li><Link to="/gerenciar-alunos">Gerenciamento de Alunos</Link></li>
                         <li><Link to="/">Grade de Horário</Link></li>
                     </ul>
                 </nav>
