@@ -1,10 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, updateDoc, arrayRemove } from 'firebase/firestore';
 import { db } from '../firebase-config';
 import './ManageStudents.css';
+import CourseName from '../components/CourseName';
+import AddCourseSection from '../components/AddCourseSection';
 
-const StudentDetailsModal = ({ student, onClose }) => {
+const StudentDetailsModal = ({ student, onClose, onStudentUpdate }) => {
     if(!student) return null;
+
+    // Função para remover um curso do aluno
+    const handleRemoveCourse = async (courseRefToRemove) => {
+
+        const isConfirmed = window.confirm("Tem certeza que deseja remover este curso do aluno?");
+
+        if (!isConfirmed) {
+            return; 
+        }
+
+        if (!student || !student.id) {
+            console.error("ID do aluno não está disponível.");
+            return;
+        }
+
+        try {
+            const studentDocRef = doc(db, 'students', student.id);
+            
+            // Remove a referência do curso do array 'enrolledCourses'
+            await updateDoc(studentDocRef, {
+                enrolledCourses: arrayRemove(courseRefToRemove)
+            });
+
+            // Chama a função para atualizar a UI no componente pai
+            if (onStudentUpdate) {
+                onStudentUpdate();
+            }
+
+        } catch (error) {
+            console.error("Erro ao remover o curso: ", error);
+        }
+    };
 
     return (
         <div className="modal-backdrop">
@@ -14,11 +48,38 @@ const StudentDetailsModal = ({ student, onClose }) => {
                     <button onClick={onClose} className='close-button'>X</button>
                 </div>
                 <div className="modal-body">
-                    <p><strong>Nome: </strong> {student.basicInfo.fullName}</p>
-                    <p><strong>Matricula: </strong> {student.matricula}</p>
-                    <p><strong>E-mail: </strong> {student.contactInfo.email}</p>
-                    <p><strong>Cursos: </strong> {student.enrolledCourses.join(',')}</p>
-                    {/* --- Adicionar Todas as informações ---*/}
+                    <div className="modal-body-seclef">
+                        <div className="modal-info">
+                            <p><strong>Nome: </strong> {student.basicInfo.fullName}</p>
+                            <p><strong>Matricula: </strong> {student.matricula}</p>
+                            <p><strong>E-mail: </strong> {student.contactInfo.email}</p>
+                        </div>
+                        <div className="modal-docs">
+
+                        </div>
+                    </div>
+                    <div className="modal-body-secrigth">
+                        <div className="modal-courses">
+                            <div className="courses-list-container">
+                                {student.enrolledCourses && student.enrolledCourses.length > 0 ? (
+                                    student.enrolledCourses.map((courseRef, index) => (
+                                        <div key={index} className="course-tag">
+                                            <CourseName courseRef={courseRef} />
+                                            <button 
+                                                className="remove-course-button"
+                                                onClick={() => handleRemoveCourse(courseRef)}
+                                            >
+                                                Remover
+                                            </button>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <span>Nenhum curso cadastrado</span>
+                                )}
+                            </div>
+                            <AddCourseSection student={student} onStudentUpdate={onStudentUpdate} />
+                        </div>
+                    </div>            
                 </div>
             </div>
         </div>
@@ -56,8 +117,8 @@ const ManageStudents = () => {
     const applyFilters = () => {
         const filtered = students.filter(student => {
             const nameMatch = student.basicInfo.fullName.toLowerCase().includes(nameFilter.toLowerCase());
-            const matriculaMatch = student.matricula.includes(matriculaFilter.toLocaleLowerCase());
-            return nameMatch && matriculaMatch;
+            //const matriculaMatch = student.matricula.includes(matriculaFilter.toLocaleLowerCase());
+            return nameMatch;
         });
         setFilteredStudantes(filtered);
     };
@@ -73,6 +134,16 @@ const ManageStudents = () => {
 
     const handleCloseModal = () => {
         setSelectedStudant(null);
+    };
+
+    const handleStudentUpdate = async () => {
+        // Recarregue os dados do aluno selecionado do Firestore
+        // Isso pode ser uma função que refetch o aluno específico ou todos os alunos
+        const studentDocRef = doc(db, 'students', selectedStudent.id);
+        const studentDoc = await getDoc(studentDocRef);
+        if (studentDoc.exists()) {
+            setSelectedStudant({ ...studentDoc.data(), id: studentDoc.id });
+        }
     };
 
     return(
@@ -110,7 +181,23 @@ const ManageStudents = () => {
                         <tr key={student.id}>
                             <td>{student.matricula}</td>
                             <td>{student.basicInfo.fullName}</td>
-                            <td>{student.enrolledCourses.join(', ')}</td>
+                            <td>
+                                {student.enrolledCourses && student.enrolledCourses.length > 0 ? (
+                                    <>
+                                        {student.enrolledCourses.slice(0, 2).map((courseRef, index) => (
+                                            <span key={index}>
+                                                <CourseName courseRef={courseRef} />
+                                                {index < student.enrolledCourses.length - 1 && ', '}
+                                            </span>
+                                        ))}
+                                        {student.enrolledCourses.length > 2 && (
+                                            <span>, ...</span>
+                                        )}
+                                    </>
+                                ) : (
+                                    <span>Nenhum curso cadastrado</span>
+                                )}
+                            </td>
                             <td>
                                 <button className='details-button' onClick={() => handleOpenModal(student)}>
                                     Ver Detalhes
@@ -122,7 +209,10 @@ const ManageStudents = () => {
             </table>
 
             {/* Modal de Detalhes */}
-            <StudentDetailsModal student={selectedStudent} onClose={handleCloseModal} /> 
+            <StudentDetailsModal
+                student={selectedStudent}
+                onClose={handleCloseModal}
+                onStudentUpdate={handleStudentUpdate}/> 
         </div>
     );
 };

@@ -1,8 +1,12 @@
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import * as logger from "firebase-functions/logger";
 import { getFirestore } from "firebase-admin/firestore";
-
+ 
 /**
+// Inicialize o SDK do Admin para interagir com o Firestore
+initializeApp();
+const db = getFirestore();
+
  * @summary Gera uma matrícula quando um novo aluno é criado.
  * @description Esta função é acionada (trigger) sempre que um novo documento
  * é adicionado na coleção 'students'. Ela gera um número de matrícula e
@@ -12,9 +16,6 @@ export const generateMatriculaOnCreate = onDocumentCreated({
   document: "students/{studentId}",
   region: "southamerica-east1",
 }, async (event) => {
-  // Inicializa o Firestore DENTRO da função para garantir que o app já foi inicializado.
-  const db = getFirestore();
-
   // O ID do documento do aluno que acabou de ser criado.
   const studentId = event.params.studentId;
   const studentData = event.data.data();

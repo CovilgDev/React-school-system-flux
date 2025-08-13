@@ -51,7 +51,7 @@ const calculateAge = (dateOfBirth) => {
 };
 
 const RegisterStudent = () =>{
-    // 1. Estado para armazenar os dados do formulario
+    // Estado para armazenar os dados do formulario
     const [studentData, setStudentData] = useState({
         //BasicInfo
         basicInfo:{
