@@ -5,8 +5,65 @@ import './ManageStudents.css';
 import CourseName from '../components/CourseName';
 import AddCourseSection from '../components/AddCourseSection';
 
+// Função auxiliar para determinar o status do pagamento
+const getPaymentStatusLabel = (paymentData) => {
+    if (!paymentData) {
+        return <span style={{ color: '#ccc' }}>Não cadastrado para este mês</span>;
+    }
+
+    if (paymentData.status === 'paid') {
+        return <span style={{ color: 'green', fontWeight: 'bold' }}>Pago</span>;
+    }
+
+    // Lógica para 'pending'
+    const now = new Date();
+    const dueDate = paymentData.dueDate.toDate();
+    const isOverdue = now > dueDate;
+
+    if (isOverdue) {
+        return <span style={{ color: 'red', fontWeight: 'bold' }}>Vencido</span>;
+    } else {
+        return <span style={{ color: 'orange', fontWeight: 'bold' }}>Em Aberto</span>;
+    }
+};
+
 const StudentDetailsModal = ({ student, onClose, onStudentUpdate }) => {
     if(!student) return null;
+
+    const [expandedTags, setExpandedTags] = useState({});
+    const [monthlyPayments, setMonthlyPayments] = useState({});
+    const [loadingPayments, setLoadingPayments] = useState(true);
+
+    // Efeito para buscar os dados de pagamento do mês atual
+    useEffect(() => {
+        const fetchMonthlyPayments = async () => {
+            if (!student || !student.enrolledCourses) return;
+
+            setLoadingPayments(true);
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const currentMonthId = `${year}-${month}`;
+
+            const paymentsData = {};
+            for (const courseRef of student.enrolledCourses) {
+                const paymentDocId = `${currentMonthId}-${courseRef.id}`;
+                const paymentDocRef = doc(db, `students/${student.id}/monthlyPayments`, paymentDocId);
+                const paymentDoc = await getDoc(paymentDocRef);
+                
+                if (paymentDoc.exists()) {
+                    paymentsData[courseRef.id] = paymentDoc.data();
+                } else {
+                    paymentsData[courseRef.id] = null; // Nenhum pagamento encontrado para o mês
+                }
+            }
+            setMonthlyPayments(paymentsData);
+            setLoadingPayments(false);
+        };
+
+        fetchMonthlyPayments();
+    }, [student.id, student.enrolledCourses]); // Dependências do useEffect
+
 
     // Função para remover um curso do aluno
     const handleRemoveCourse = async (courseRefToRemove) => {
@@ -40,6 +97,14 @@ const StudentDetailsModal = ({ student, onClose, onStudentUpdate }) => {
         }
     };
 
+    // Função para expandir/colapsar a tag do curso
+    const toggleTag = (courseId) => {
+        setExpandedTags(prev => ({
+            ...prev,
+            [courseId]: !prev[courseId]
+        }));
+    };
+
     return (
         <div className="modal-backdrop">
             <div className="modal-content">
@@ -59,18 +124,49 @@ const StudentDetailsModal = ({ student, onClose, onStudentUpdate }) => {
                         </div>
                     </div>
                     <div className="modal-body-secrigth">
-                        <div className="modal-courses">
+                       <div className="modal-courses">
                             <div className="courses-list-container">
-                                {student.enrolledCourses && student.enrolledCourses.length > 0 ? (
+                                {loadingPayments ? (
+                                    <span>Carregando pagamentos...</span>
+                                ) : student.enrolledCourses && student.enrolledCourses.length > 0 ? (
                                     student.enrolledCourses.map((courseRef, index) => (
-                                        <div key={index} className="course-tag">
-                                            <CourseName courseRef={courseRef} />
-                                            <button 
-                                                className="remove-course-button"
-                                                onClick={() => handleRemoveCourse(courseRef)}
-                                            >
-                                                Remover
-                                            </button>
+                                        <div 
+                                            key={courseRef.id} 
+                                            className="course-tag"
+                                            onClick={() => toggleTag(courseRef.id)} // Adiciona o evento de clique
+                                        >
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                                <CourseName courseRef={courseRef} />
+                                                <button
+                                                    className={`expand-toggle-button ${expandedTags[courseRef.id] ? 'expanded' : ''}`}
+                                                    onClick={(e) => {
+                                                            e.stopPropagation(); // Previne que o clique no botão ative o clique da div pai
+                                                            toggleTag(courseRef.id);
+                                                        }}
+                                                >
+                                                    {expandedTags[courseRef.id] ? '-' : '+'}
+                                                </button>
+                                            </div>
+
+                                            {expandedTags[courseRef.id] && (
+                                                <div style={{ marginTop: '10px', width: '100%', borderTop: '1px solid #eee', paddingTop: '10px' }}>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                        <p>
+                                                            <strong>Situação Mensalidade: </strong>
+                                                            {getPaymentStatusLabel(monthlyPayments[courseRef.id])}
+                                                        </p>
+                                                        <button 
+                                                            className="remove-course-button"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation(); // Previne que o clique feche a tag
+                                                                handleRemoveCourse(courseRef);
+                                                            }}
+                                                        >
+                                                            Remover
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     ))
                                 ) : (
