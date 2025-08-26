@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
+import { getStorage } from "firebase/storage";
 import {
     getAuth,
     onAuthStateChanged,
@@ -33,6 +34,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const analytics = getAnalytics(app);
+const storage = getStorage();
 
 // Exporta as instâncias e as funções do SDK
 export {
@@ -40,6 +42,7 @@ export {
     auth,
     db,
     analytics,
+    storage,
     // Funções do Firestore
     doc,
     setDoc,

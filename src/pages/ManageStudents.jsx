@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, doc, getDoc, updateDoc, arrayRemove, query, where, orderBy, onSnapshot } from 'firebase/firestore';
-import { db } from '../firebase-config';
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { db, storage } from '../firebase-config';
 import './ManageStudents.css';
 import CourseName from '../components/CourseName';
 import AddCourseSection from '../components/AddCourseSection';
@@ -74,6 +75,48 @@ const StudentDetailsModal = ({ student, onClose, onStudentUpdate }) => {
         };
     }, [student.id, student.enrolledCourses]);
 
+    const handleUpload = async (event, documentType) => {
+        // Evita o comportamento padrão do botão
+        event.stopPropagation();
+        
+        // Abre a janela de seleção de arquivo
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = documentType === 'photo' ? 'image/*' : '.pdf'; // Restringe o tipo de arquivo
+        input.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+        
+            if (!student || !student.id) {
+                alert("ID do aluno não está disponível.");
+                return;
+            }
+        
+            try {
+                // Referência ao arquivo no Storage. A pasta será criada automaticamente.
+                const fileRef = ref(storage, `documentos-alunos/${student.id}/${documentType}/${file.name}`);
+                
+                // Faz o upload do arquivo
+                await uploadBytes(fileRef, file);
+                
+                // Obtém a URL de download
+                const downloadURL = await getDownloadURL(fileRef);
+                
+                // Atualiza o documento do aluno no Firestore com a URL
+                const studentDocRef = doc(db, 'students', student.id);
+                await updateDoc(studentDocRef, {
+                    [`documents.${documentType}`]: downloadURL
+                });
+            
+                alert(`Upload de ${documentType} realizado com sucesso!`);
+            } catch (error) {
+                console.error(`Erro ao fazer o upload de ${documentType}: `, error);
+                alert(`Ocorreu um erro ao fazer o upload. Por favor, tente novamente.`);
+            }
+        };
+        input.click(); // Simula o clique no input de arquivo
+    };
+
     const handleRemoveCourse = async (courseRefToRemove) => {
         const isConfirmed = window.confirm("Tem certeza que deseja remover este curso do aluno?");
         if (!isConfirmed) return;
@@ -139,10 +182,63 @@ const StudentDetailsModal = ({ student, onClose, onStudentUpdate }) => {
                 </header>
                 <div className="modal-body">
                     <div className='modal-body-seclef'>
-                        <h3 className='modal-title-sec-h3'>Informações Básicas:</h3>
-                        <p><strong>Nome:</strong> {student.basicInfo.fullName}</p>
-                        <p><strong>Matricula:</strong> {student.matricula}</p>
-                        <p><strong>E-mail:</strong> {student.contactInfo.email}</p>
+                        <div className='modal-info'>
+                            <div className="student-photo-section">
+                                {student.documents?.photo ? (
+                                    <img src={student.documents.photo} alt="Foto do Aluno" className="student-photo-preview" />
+                                ) : (
+                                    <div className="student-photo-placeholder">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 12a5 5 0 110-10 5 5 0 010 10zM12 14c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                                        </svg>
+                                    </div>
+                                )}
+                                <p><strong>Foto do Aluno:</strong></p>
+                                {student.documents?.photo ? (
+                                    <button className="view-button" onClick={() => window.open(student.documents.photo, '_blank')}>Visualizar</button>
+                                ) : (
+                                    <button 
+                                        className="upload-button"
+                                        onClick={(e) => handleUpload(e, 'photo')}
+                                    >
+                                        Fazer Upload
+                                    </button>
+                                )}
+                            </div>
+                            <h3 className='modal-title-sec-h3'>Informações Básicas:</h3>
+                            <p><strong>Nome:</strong> {student.basicInfo.fullName}</p>
+                            <p><strong>Matricula:</strong> {student.matricula}</p>
+                            <p><strong>E-mail:</strong> {student.contactInfo.email}</p>
+                        </div>
+                        <div className="modal-docs">
+                            <h3>Documentos:</h3>
+                            <div className="document-item">
+                                <strong>Autorização de Imagem:</strong>
+                                {student.documents?.imageAuthorization ? (
+                                    <button className="view-button" onClick={() => window.open(student.documents.imageAuthorization, '_blank')}>Visualizar</button>
+                                ) : (
+                                    <button 
+                                        className="upload-button"
+                                        onClick={(e) => handleUpload(e, 'imageAuthorization')}
+                                    >
+                                        Fazer Upload
+                                    </button>
+                                )}
+                            </div>
+                            <div className="document-item">
+                                <strong>Liberação Médica:</strong>
+                                {student.documents?.medicalRelease ? (
+                                    <button className="view-button" onClick={() => window.open(student.documents.medicalRelease, '_blank')}>Visualizar</button>
+                                ) : (
+                                    <button 
+                                        className="upload-button"
+                                        onClick={(e) => handleUpload(e, 'medicalRelease')}
+                                    >
+                                        Fazer Upload
+                                    </button>
+                                )}
+                            </div>
+                        </div>
                     </div>
 
                     <div className='modal-body-secrigth'>

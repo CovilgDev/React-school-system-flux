@@ -219,3 +219,24 @@ export const createMonthlyPaymentsScheduled = onSchedule({
         return null;
     }
 });
+
+export const initializeStudentDocuments = onDocumentCreated({
+    document: "students/{studentId}",
+    region: "southamerica-east1",
+}, async (event) => {
+    // O ID do documento do aluno que acabou de ser criado.
+    const studentId = event.params.studentId;
+
+    try {
+        await event.data.ref.update({
+            documents: {
+                photo: '',
+                imageAuthorization: '',
+                medicalRelease: ''
+            }
+        });
+        logger.info(`Documentos inicializados com sucesso para o aluno: ${studentId}`);
+    } catch (error) {
+        logger.error("Erro ao inicializar documentos para o aluno:", studentId, error);
+    }
+});
