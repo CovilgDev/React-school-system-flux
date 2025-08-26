@@ -167,6 +167,7 @@
 /* Estilo para o container de todos os cards */
 .courses-list-container {
     height: 90%;
+    overflow-y: scroll;
 }
 
 /* Estilo para cada card de curso */
@@ -262,4 +263,22 @@
 .expand-toggle-button.expanded {
     transform: rotate(45deg);
     color: #dc3545; 
+}
+
+.pay-button {
+    background-color: #4CAF50; /* Verde */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.pay-button:hover {
+    background-color: #45a049;
 }
