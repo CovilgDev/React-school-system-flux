@@ -76,45 +76,73 @@ const StudentDetailsModal = ({ student, onClose, onStudentUpdate }) => {
     }, [student.id, student.enrolledCourses]);
 
     const handleUpload = async (event, documentType) => {
-        // Evita o comportamento padrão do botão
         event.stopPropagation();
         
-        // Abre a janela de seleção de arquivo
         const input = document.createElement('input');
         input.type = 'file';
-        input.accept = documentType === 'photo' ? 'image/*' : '.pdf'; // Restringe o tipo de arquivo
+
+        // Apenas .pdf para documentos, qualquer imagem para foto
+        input.accept = documentType === 'photo' ? 'image/*' : '.pdf';
+        
         input.onchange = async (e) => {
             const file = e.target.files[0];
             if (!file) return;
-        
+
             if (!student || !student.id) {
                 alert("ID do aluno não está disponível.");
                 return;
             }
-        
+
             try {
-                // Referência ao arquivo no Storage. A pasta será criada automaticamente.
+                // Referência ao arquivo no Storage.
                 const fileRef = ref(storage, `documentos-alunos/${student.id}/${documentType}/${file.name}`);
-                
+
                 // Faz o upload do arquivo
                 await uploadBytes(fileRef, file);
-                
+
                 // Obtém a URL de download
                 const downloadURL = await getDownloadURL(fileRef);
-                
-                // Atualiza o documento do aluno no Firestore com a URL
+
+                let docData = {};
+
+                // Lógica para documentos com validade
+                if (documentType === 'imageAuthorization' || documentType === 'medicalRelease') {
+                    const hasExpiration = window.confirm("O documento possui prazo de validade?");
+                    let expirationDate = null;
+
+                    if (hasExpiration) {
+                        const dateInput = window.prompt("Por favor, insira a data de validade (formato AAAA-MM-DD):");
+                        if (dateInput) {
+                            expirationDate = dateInput;
+                        } else {
+                            alert("Data de validade não inserida. O documento será salvo sem validade.");
+                        }
+                    }
+
+                    docData = {
+                        url: downloadURL,
+                        fileName: file.name,
+                        hasExpiration: hasExpiration,
+                        expirationDate: expirationDate
+                    };
+
+                } else { // Lógica para a foto do aluno
+                    docData = downloadURL; // Salva a URL diretamente
+                }
+
+                // Atualiza o documento do aluno no Firestore
                 const studentDocRef = doc(db, 'students', student.id);
                 await updateDoc(studentDocRef, {
-                    [`documents.${documentType}`]: downloadURL
+                    [`documents.${documentType}`]: docData
                 });
-            
+
                 alert(`Upload de ${documentType} realizado com sucesso!`);
             } catch (error) {
                 console.error(`Erro ao fazer o upload de ${documentType}: `, error);
                 alert(`Ocorreu um erro ao fazer o upload. Por favor, tente novamente.`);
             }
         };
-        input.click(); // Simula o clique no input de arquivo
+        input.click();
     };
 
     const handleRemoveCourse = async (courseRefToRemove) => {
@@ -183,39 +211,99 @@ const StudentDetailsModal = ({ student, onClose, onStudentUpdate }) => {
                 <div className="modal-body">
                     <div className='modal-body-seclef'>
                         <div className='modal-info'>
-                            <div className="student-photo-section">
-                                {student.documents?.photo ? (
-                                    <img src={student.documents.photo} alt="Foto do Aluno" className="student-photo-preview" />
-                                ) : (
-                                    <div className="student-photo-placeholder">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M12 12a5 5 0 110-10 5 5 0 010 10zM12 14c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                        </svg>
+                            <div className='modal-info-sec1'>
+                                <div className="student-photo-section">
+                                    {student.documents?.photo ? (
+                                        <img src={student.documents.photo} alt="Foto do Aluno" className="student-photo-preview" />
+                                    ) : (
+                                        <div className="student-photo-placeholder">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M12 12a5 5 0 110-10 5 5 0 010 10zM12 14c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                                            </svg>
+                                        </div>
+                                    )}
+                                    <strong>Matricula: {student.matricula}</strong>
+                                    {student.documents?.photo ? (
+                                        <button className="view-button" onClick={() => window.open(student.documents.photo, '_blank')}>Visualizar</button>
+                                    ) : (
+                                        <button 
+                                            className="upload-button"
+                                            onClick={(e) => handleUpload(e, 'photo')}
+                                        >
+                                            Fazer Upload
+                                        </button>
+                                    )}
+                                </div>
+                                <div className='basic-info-card modal-card'>
+                                    <h3 className='modal-title-sec-h3'>Informações Básicas:</h3>
+                                    <div className='card-row'>
+                                        <p><strong>Data de Cadastro:</strong></p>
+                                        <p><strong>Status: </strong>{student.basicInfo.status}</p>
                                     </div>
-                                )}
-                                <p><strong>Foto do Aluno:</strong></p>
-                                {student.documents?.photo ? (
-                                    <button className="view-button" onClick={() => window.open(student.documents.photo, '_blank')}>Visualizar</button>
-                                ) : (
-                                    <button 
-                                        className="upload-button"
-                                        onClick={(e) => handleUpload(e, 'photo')}
-                                    >
-                                        Fazer Upload
-                                    </button>
-                                )}
+                                    <div className='card-row'>
+                                        <p><strong>Nome:</strong> {student.basicInfo.fullName}</p>
+                                        <p><strong>Data de Nascimento:</strong></p>
+                                    </div>
+                                    <div className='card-row'>
+                                        <p><strong>{student.basicInfo.identificationDocument.type}: </strong>{student.basicInfo.identificationDocument.number}</p>
+                                        <p><strong>Genero: </strong>{student.basicInfo.gender}</p>
+                                    </div>
+                                    <div className='card-row'><p><strong>Escolaridade: </strong>{student.basicInfo.educationLevel}</p></div>
+                                </div>
                             </div>
-                            <h3 className='modal-title-sec-h3'>Informações Básicas:</h3>
-                            <p><strong>Nome:</strong> {student.basicInfo.fullName}</p>
-                            <p><strong>Matricula:</strong> {student.matricula}</p>
-                            <p><strong>E-mail:</strong> {student.contactInfo.email}</p>
+                            <div className='modal-info-sec2 modal-card'>
+                                <div className='contact-Info-card'>
+                                    <h3 className='modal-title-sec-h3'>Informações de Contato: </h3>
+                                    <div className='card-row'>
+                                        <p><strong>Cidade: </strong>{student.contactInfo.address.city}</p>
+                                        <p><strong>Bairro: </strong>{student.contactInfo.address.neighborhood}</p>
+                                    </div>
+                                    <div className='card-row'>
+                                        <p><strong>Rua: </strong>{student.contactInfo.address.street}</p>
+                                        <p><strong>Cep: </strong>{student.contactInfo.address.zipcode}</p>
+                                    </div>
+                                    <div className='card-row'>
+                                        <p><strong>Telefone: </strong>{student.contactInfo.phone}</p>
+                                        <p><strong>E-mail: </strong>{student.contactInfo.email}</p>
+                                    </div>
+                                    <div className='card-row'>
+                                        <p><strong>Contato de Emergência: </strong>{student.contactInfo.emergencyContact}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='modal-info-sec3 modal-card'>
+                                    <div className='responsible-Info-card'>
+                                        <h3 className='modal-title-sec-h3'>Informações dos Responsaveis: </h3>
+                                    </div>
+                            </div>
+                            <div className='modal-info-sec4 modal-card'>
+                                    <h3 className='modal-title-sec-h3'>Informações de Saúde: </h3>
+                                    <div className='health-Info-card'>
+                                        <div className='card-row'><p><strong>Tipo Sanguíneo: </strong>{student.healthInfo.bloodType}</p></div>
+                                        <div className='card-row'><p><strong>Alergias: </strong>{student.healthInfo.allergies}</p></div>
+                                        <div className='card-row'><p><strong>Doenças Crônicas: </strong>{student.healthInfo.chronicDiseases}</p></div>
+                                        <div className='card-row'><p><strong>Restrições Alimentares: </strong>{student.healthInfo.dietaryRestrictions}</p></div>
+                                        <div className='card-row'><p><strong>Medicações Tomadas Regularmente: </strong>{student.healthInfo.regularMedications}</p></div>
+                                        <div className='card-row'><p><strong>Informações do Plano de Saúde: </strong>{student.healthInfo.healthPlanDetails}</p></div>
+
+                                    </div>
+                            </div>
                         </div>
                         <div className="modal-docs">
                             <h3>Documentos:</h3>
                             <div className="document-item">
                                 <strong>Autorização de Imagem:</strong>
-                                {student.documents?.imageAuthorization ? (
-                                    <button className="view-button" onClick={() => window.open(student.documents.imageAuthorization, '_blank')}>Visualizar</button>
+                                {student.documents?.imageAuthorization && student.documents.imageAuthorization.url ? (
+                                    <>
+                                        <span>{student.documents.imageAuthorization.fileName}</span>
+                                        <span className="validity-status">
+                                            {student.documents.imageAuthorization.hasExpiration ? 
+                                                `Válido até: ${student.documents.imageAuthorization.expirationDate}` : 
+                                                "Sem validade"
+                                            }
+                                        </span>
+                                        <button className="view-button" onClick={() => window.open(student.documents.imageAuthorization.url, '_blank')}>Visualizar</button>
+                                    </>
                                 ) : (
                                     <button 
                                         className="upload-button"
@@ -227,8 +315,17 @@ const StudentDetailsModal = ({ student, onClose, onStudentUpdate }) => {
                             </div>
                             <div className="document-item">
                                 <strong>Liberação Médica:</strong>
-                                {student.documents?.medicalRelease ? (
-                                    <button className="view-button" onClick={() => window.open(student.documents.medicalRelease, '_blank')}>Visualizar</button>
+                                {student.documents?.medicalRelease && student.documents.medicalRelease.url ? (
+                                    <>
+                                        <span>{student.documents.medicalRelease.fileName}</span>
+                                        <span className="validity-status">
+                                            {student.documents.medicalRelease.hasExpiration ? 
+                                                `Válido até: ${student.documents.medicalRelease.expirationDate}` : 
+                                                "Sem validade"
+                                            }
+                                        </span>
+                                        <button className="view-button" onClick={() => window.open(student.documents.medicalRelease.url, '_blank')}>Visualizar</button>
+                                    </>
                                 ) : (
                                     <button 
                                         className="upload-button"
