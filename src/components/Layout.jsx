@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './Layout.css';
+import '../assets/styles/layout.css';
 
-const Layout = ({ children, onLogout }) => {
+const Layout = ({ children, onLogout, onToggleDarkMode }) => {
     return(
         <div className="app-container">
             {/*Barra lateral*/}
@@ -88,6 +88,7 @@ const Layout = ({ children, onLogout }) => {
                         </div>
                         Sair
                     </button>
+                    <button onClick={onToggleDarkMode}>Alternar Modo Escuro</button>
                 </div>
             </aside>
 

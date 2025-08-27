@@ -1,0 +1,107 @@
+/* ============================================== */
+/* CONTAINER E TABELA GERAL                       */
+/* ============================================== */
+
+.schedule-container {
+    padding: 20px;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--background-card);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: background-color 0.5s ease;
+}
+
+.schedule-table th, .schedule-table td {
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    text-align: center;
+    color: var(--text-dark);
+    transition: border-color 0.5s ease;
+}
+
+.schedule-table th {
+    background-color: var(--background-light);
+    font-weight: bold;
+    color: var(--text-dark);
+}
+
+.time-header {
+    width: 60px;
+}
+
+.time-cell {
+    background-color: var(--background-light);
+    font-weight: bold;
+    color: var(--text-dark);
+}
+
+/* ============================================== */
+/* CÉLULAS E CARDS DE AULA                        */
+/* ============================================== */
+
+.class-cell-wrapper {
+    position: relative;
+    min-height: 80px; /* Aumentado para melhor visualização */
+    vertical-align: top;
+    padding: 5px;
+}
+
+.class-cell {
+    background-color: var(--primary-light);
+    color: var(--text-primary);
+    border-radius: var(--border-radius-sm);
+    padding: 10px;
+    height: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: background-color 0.5s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.class-cell:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.class-info {
+    text-align: center;
+    color: var(--text-dark);
+}
+
+.class-info strong {
+    font-size: 0.9em;
+    display: block;
+}
+
+.class-info small {
+    font-size: 0.8em;
+    color: var(--text-dark);
+    opacity: 0.7;
+}
+
+/* ============================================== */
+/* BOTÃO CHAMADA                                  */
+/* ============================================== */
+
+.call-list-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.8em;
+    margin-top: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.call-list-button:hover {
+    background-color: var(--primary-hover);
+}

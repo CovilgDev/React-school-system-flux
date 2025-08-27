@@ -1,0 +1,147 @@
+/* ============================================== */
+/* ESTILOS ESPECÍFICOS DO COMPONENTE PRINCIPAL    */
+/* ============================================== */
+
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+/* ============================================== */
+/* LAYOUTS DA PÁGINA HOME                         */
+/* ============================================== */
+
+.welcome-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.welcome-header h1 {
+    margin: 0 0 8px 0;
+    color: var(--text-dark);
+}
+
+.welcome-header p {
+    color: var(--text-dark);
+    opacity: 0.8;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    padding: 24px;
+    background-color: var(--background-card);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    padding: 12px;
+    background-color: var(--primary-color);
+    border-radius: 50%; /* Mantido como 50% para ser um círculo */
+    margin-right: 20px;
+}
+
+.stat-icon svg {
+    width: 24px;
+    height: 24px;
+    color: white; /* Ícones em branco para contrastar com o fundo */
+}
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-content h3 {
+    margin: 0;
+    font-size: 16px;
+    color: var(--text-dark);
+    opacity: 0.8;
+}
+
+.stat-number {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 4px 0;
+    color: var(--primary-color);
+}
+
+.stat-label {
+    font-size: 14px;
+    color: var(--text-dark);
+    opacity: 0.6;
+}
+
+/* ============================================== */
+/* ANIMAÇÕES                                      */
+/* ============================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* ============================================== */
+/* RESPONSIVIDADE                                 */
+/* ============================================== */
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+    }
+
+    .welcome-header {
+        margin-bottom: 20px;
+    }
+}

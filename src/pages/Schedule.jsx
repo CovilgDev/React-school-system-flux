@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs, getDoc } from 'firebase/firestore';
 import { db } from '../firebase-config';
-import './Schedule.css';
+import '../assets/styles/Schedule.css';
 
 
 const Schedule = () => {

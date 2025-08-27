@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { addDoc, collection, db } from '../firebase-config';
-import './RegisterStudent.css';
+import '../assets/styles/RegisterStudent.css';
 
 // Função auxiliar para atualizar objetos aninhados
 const updateNestedObject = (obj, path, val) => {
@@ -104,7 +104,51 @@ const RegisterStudent = () =>{
         setShowResponsibleInfo(isMinor);
     };
 
-    // 3. Função para lidar com as mudanças nos campos
+    const handleAddResponsible = () => {
+        setStudentData(prevData => ({
+            ...prevData,
+            responsibleInfo: [
+                ...prevData.responsibleInfo,
+                {
+                    name: '',
+                    phone: '',
+                    cpf: '',
+                    relationship: ''
+                }
+            ]
+        }));
+    };
+
+    const handleResponsibleChange = (e, index) => {
+        const { name, value } = e.target;
+        let newValue = value;
+        
+        // Se o campo for o CPF, aplica a máscara
+        if (name === 'cpf') {
+            newValue = formatDocumentNumber(value, 'CPF');
+        }
+    
+        setStudentData(prevData => {
+            const updatedResponsibleInfo = [...prevData.responsibleInfo];
+            updatedResponsibleInfo[index] = {
+                ...updatedResponsibleInfo[index],
+                [name]: newValue
+            };
+            return {
+                ...prevData,
+                responsibleInfo: updatedResponsibleInfo
+            };
+        });
+    };
+
+    const handleRemoveResponsible = (indexToRemove) => {
+        setStudentData(prevData => ({
+            ...prevData,
+            responsibleInfo: prevData.responsibleInfo.filter((_, index) => index !== indexToRemove)
+        }));
+    };
+
+    // Função para lidar com as mudanças nos campos
     const handleChange = (e) => {
         const { name, value, type } = e.target;
 
@@ -166,7 +210,7 @@ const RegisterStudent = () =>{
         }));
     };
 
-    // 4. Função para lidar com o envio do formulário
+    // Função para lidar com o envio do formulário
     const handleSubmit = async (e) => {
         e.preventDefault();
         setMessage('Cadastrando...');
@@ -362,6 +406,7 @@ const RegisterStudent = () =>{
                         <input
                             type="tel"
                             id="phone"
+                            placeholder='(00) 00000-0000'
                             name="contactInfo.phone"
                             value={studentData.contactInfo.phone}
                             onChange={handleChange}
@@ -373,6 +418,7 @@ const RegisterStudent = () =>{
                         <input
                             type="email"
                             id="email"
+                            placeholder='seuemail@email.com'
                             name="contactInfo.email"
                             value={studentData.contactInfo.email}
                             onChange={handleChange}
@@ -384,6 +430,7 @@ const RegisterStudent = () =>{
                         <input
                             type="text"
                             id="emergencyContact"
+                            placeholder='nome do contato [numero de contato]'
                             name="contactInfo.emergencyContact"
                             value={studentData.contactInfo.emergencyContact}
                             onChange={handleChange}
@@ -503,6 +550,7 @@ const RegisterStudent = () =>{
                         <input
                             type="text"
                             id="healthPlanDetails"
+                            placeholder='Nome do plano [Numero de contato] [Observações]'
                             name="healthInfo.healthPlanDetails"
                             value={studentData.healthInfo.healthPlanDetails}
                             onChange={handleChange}
@@ -546,22 +594,75 @@ const RegisterStudent = () =>{
                     {/* Renderização condicional da seção do responsável */}
                     {showResponsibleInfo && (
                         <>
-                            <div className="responsible-info">
-                                <h3>Responsável 1</h3>
-                                <div className="form-group">
-                                    <label>Nome do Responsável 1:</label>
-                                    <input type="text" /* ... */ />
+                            {studentData.responsibleInfo.map((responsible, index) => (
+                                <div key={index} className="responsible-info">
+                                    {/* Título e botão de remoção na mesma linha */}
+                                    <div className="responsible-header">
+                                        <h3>Responsável {index + 1}</h3>
+                                        {/* Botão de remoção */}
+                                        <button
+                                            type="button"
+                                            className="remove-button" // Adicione uma classe para estilizar
+                                            onClick={() => handleRemoveResponsible(index)}
+                                        >
+                                            Remover
+                                        </button>
+                                    </div>
+
+                                    {/* Campos do formulário para o responsável */}
+                                    <div className="form-group">
+                                        <label>Nome do Responsável {index + 1}:</label>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            value={responsible.name}
+                                            onChange={(e) => handleResponsibleChange(e, index)}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Relação:</label>
+                                        <select
+                                            name="relationship"
+                                            value={responsible.relationship}
+                                            onChange={(e) => handleResponsibleChange(e, index)}
+                                        >
+                                            <option value="">Selecione</option>
+                                            <option value="Pai">Pai</option>
+                                            <option value="Mãe">Mãe</option>
+                                            <option value="Tio(a)">Tio(a)</option>
+                                            <option value="Padrasto/Madrasta">Padrasto/Madrasta</option>
+                                            <option value="Avô/Avó">Avô/Avó</option>
+                                            <option value="Outro">Outro</option>
+                                        </select>
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Telefone do Responsável {index + 1}:</label>
+                                        <input
+                                            type="tel"
+                                            name="phone"
+                                            value={responsible.phone}
+                                            onChange={(e) => handleResponsibleChange(e, index)}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>CPF do Responsável {index + 1}:</label>
+                                        <input
+                                            type="text"
+                                            name="cpf"
+                                            value={responsible.cpf}
+                                            onChange={(e) => handleResponsibleChange(e, index)}
+                                            maxLength="14" // Limita a entrada a 14 caracteres
+                                        />
+                                    </div>
                                 </div>
-                                <div className="form-group">
-                                    <label>Telefone do Responsável 1:</label>
-                                    <input type="text" /* ... */ />
-                                </div>
-                                <div className="form-group">
-                                    <label>CPF do Responsável 1:</label>
-                                    <input type="text" /* ... */ />
-                                </div>
+                            ))}
+
+                            {/* Botão para adicionar mais responsáveis */}
+                            <div className="form-group">
+                                <button className="btn-submit internal-button" type="button" onClick={handleAddResponsible}>
+                                    + Adicionar Responsável
+                                </button>
                             </div>
-                            {/* POSTERIOMENTE ADICIONAR LOGICA PRA ADICIONAR RESPONSAVEIS */}
                         </>
                     )}
                 </section>
@@ -569,7 +670,7 @@ const RegisterStudent = () =>{
                 {/* ========================================= */}
                 {/* 5. BOTÃO DE ENVIO             */}
                 {/* ========================================= */}
-                <button type="submit">Cadastrar Aluno</button>
+                <button className="btn-submit" type="submit">Cadastrar Aluno</button>
             </form>
             {message && <p className="message">{message}</p>}
         </div>

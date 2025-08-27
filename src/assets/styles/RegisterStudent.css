@@ -1,0 +1,172 @@
+/* ============================================== */
+/* CONTAINER PRINCIPAL                            */
+/* ============================================== */
+
+.container {
+    background-color: var(--background-card);
+    max-width: 700px;
+    margin: 30px auto;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.5s ease;
+}
+
+/* ============================================== */
+/* TÍTULOS E SUBTÍTULOS                           */
+/* ============================================== */
+
+h1, h2 {
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin-top: 25px;
+}
+
+h3 {
+    margin-bottom: 10px;
+}
+
+/* ============================================== */
+/* ESTILOS DE FORMULÁRIO                          */
+/* ============================================== */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+    color: var(--text-dark);
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+    background-color: var(--background-card);
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-hover);
+}
+
+.form-group select {
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%233F4756" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position-x: 98%;
+    background-position-y: 50%;
+    padding-right: 30px;
+}
+
+/* ============================================== */
+/* ESTILOS DE RADIO BUTTONS                       */
+/* ============================================== */
+
+.radio-group {
+    display: flex;
+    gap: 20px;
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+}
+
+.radio-item input {
+    width: auto;
+    margin-right: 5px;
+}
+
+.radio-item label {
+    margin: 0;
+}
+
+/* ============================================== */
+/* BOTÕES                                         */
+/* ============================================== */
+
+.btn-submit {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    width: 100%;
+    display: block;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: var(--primary-hover);
+}
+
+.remove-button {
+    background-color: var(--error-color);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 10px;
+    margin: 0px 0px 10px 10px;
+    transition: background-color 0.3s ease;
+}
+
+.remove-button:hover {
+    background-color: var(--error-hover);
+}
+
+.internal-button {
+    width: 240px;
+}
+
+/* ============================================== */
+/* MENSAGENS E FEEDBACK                           */
+/* ============================================== */
+
+.message {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 4px;
+    background-color: var(--background-light);
+    color: var(--text-dark);
+    text-align: center;
+    font-size: 0.9em;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* ============================================== */
+/* OUTROS ESTILOS DE LAYOUT                       */
+/* ============================================== */
+
+.responsible-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.responsible-header h3 {
+    margin: 0px 0px 10px 0px;
+}

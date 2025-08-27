@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs, doc, getDoc, updateDoc, arrayRemove, query, where, orderBy, onSnapshot } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from '../firebase-config';
-import './ManageStudents.css';
 import CourseName from '../components/CourseName';
 import AddCourseSection from '../components/AddCourseSection';
+import '../assets/styles/ManageStudents.css';
 
 // Função auxiliar para determinar o status do pagamento
 const getPaymentStatusLabel = (paymentData) => {
@@ -236,6 +236,7 @@ const StudentDetailsModal = ({ student, onClose, onStudentUpdate }) => {
                                 </div>
                                 <div className='basic-info-card modal-card'>
                                     <h3 className='modal-title-sec-h3'>Informações Básicas:</h3>
+                                    <hr />
                                     <div className='card-row'>
                                         <p><strong>Data de Cadastro:</strong></p>
                                         <p><strong>Status: </strong>{student.basicInfo.status}</p>
@@ -251,9 +252,10 @@ const StudentDetailsModal = ({ student, onClose, onStudentUpdate }) => {
                                     <div className='card-row'><p><strong>Escolaridade: </strong>{student.basicInfo.educationLevel}</p></div>
                                 </div>
                             </div>
-                            <div className='modal-info-sec2 modal-card'>
-                                <div className='contact-Info-card'>
+                            <div className='modal-info-sec2'>
+                                <div className='contact-Info-card modal-card'>
                                     <h3 className='modal-title-sec-h3'>Informações de Contato: </h3>
+                                    <hr />
                                     <div className='card-row'>
                                         <p><strong>Cidade: </strong>{student.contactInfo.address.city}</p>
                                         <p><strong>Bairro: </strong>{student.contactInfo.address.neighborhood}</p>
@@ -271,13 +273,34 @@ const StudentDetailsModal = ({ student, onClose, onStudentUpdate }) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className='modal-info-sec3 modal-card'>
-                                    <div className='responsible-Info-card'>
-                                        <h3 className='modal-title-sec-h3'>Informações dos Responsaveis: </h3>
+                            {student?.responsibleInfo?.length > 0 && (
+                                <div className='modal-info-sec3'>
+                                    <div className='responsible-Info-card modal-card'>
+                                        <h3 className='modal-title-sec-h3'>Informações dos Responsáveis:</h3>
+                                        <hr />
+                                        {student.responsibleInfo.map((responsible, index) => (
+                                            <div key={index} className="responsible-details">
+                                                <div className='card-row'><p><strong>Responsável {index + 1}:</strong></p></div>
+                                                <div className='card-row'>
+                                                    <p><strong>Nome:</strong> {responsible.name}</p>
+                                                    <p><strong>Relação:</strong> {responsible.relationship}</p>
+                                                </div>
+                                                <div className='card-row'>
+                                                    <p><strong>Telefone:</strong> {responsible.phone}</p>
+                                                    <p><strong>CPF:</strong> {responsible.cpf}</p>
+                                                </div>
+                                                {index < student.responsibleInfo.length - 1 && (
+                                                    <hr />
+                                                )}
+                                            </div>
+                                        ))}
+
                                     </div>
-                            </div>
+                                </div>
+                            )}
                             <div className='modal-info-sec4 modal-card'>
                                     <h3 className='modal-title-sec-h3'>Informações de Saúde: </h3>
+                                    <hr />
                                     <div className='health-Info-card'>
                                         <div className='card-row'><p><strong>Tipo Sanguíneo: </strong>{student.healthInfo.bloodType}</p></div>
                                         <div className='card-row'><p><strong>Alergias: </strong>{student.healthInfo.allergies}</p></div>
@@ -341,6 +364,7 @@ const StudentDetailsModal = ({ student, onClose, onStudentUpdate }) => {
                     <div className='modal-body-secrigth'>
                         <div className="modal-courses">
                             <strong>Cursos: </strong>
+                            <hr />
                             <div className="courses-list-container">
                                 {loadingPayments ? (
                                     <span>Carregando histórico de pagamentos...</span>
@@ -443,7 +467,7 @@ const StudentDetailsModal = ({ student, onClose, onStudentUpdate }) => {
                                                                 handleRemoveCourse(courseRef);
                                                             }}
                                                         >
-                                                            Remover
+                                                            Remover Curso
                                                         </button>
                                                     </div>
                                                 )}
@@ -454,8 +478,8 @@ const StudentDetailsModal = ({ student, onClose, onStudentUpdate }) => {
                                     <span>Nenhum curso cadastrado</span>
                                 )}
                             </div>
-                            <AddCourseSection student={student} onStudentUpdate={onStudentUpdate} />
                         </div>
+                        <AddCourseSection student={student} onStudentUpdate={onStudentUpdate} />
                     </div>
                 </div>
             </div>
@@ -494,8 +518,8 @@ const ManageStudents = () => {
     const applyFilters = () => {
         const filtered = students.filter(student => {
             const nameMatch = student.basicInfo.fullName.toLowerCase().includes(nameFilter.toLowerCase());
-            //const matriculaMatch = student.matricula.includes(matriculaFilter.toLocaleLowerCase());
-            return nameMatch;
+            const matriculaMatch = student.matricula.includes(matriculaFilter.toLocaleLowerCase());
+            return nameMatch && matriculaMatch;
         });
         setFilteredStudantes(filtered);
     };

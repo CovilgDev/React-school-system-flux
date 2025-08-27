@@ -1,0 +1,472 @@
+/* ============================================== */
+/* GERAL E FILTROS                                */
+/* ============================================== */
+
+.manage-students-container {
+    padding: 20px;
+}
+
+.filters {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.filters input {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    flex-grow: 1;
+    background-color: var(--background-card);
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+}
+
+.filters input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-hover);
+}
+
+/* ============================================== */
+/* TABELA DE ALUNOS                               */
+/* ============================================== */
+
+.students-table {
+    width: 100%;
+    border-collapse: separate; /* Use separate para controlar o border-spacing */
+    border-spacing: 0;
+    margin-top: 20px;
+    background-color: var(--background-card);
+    border-radius: 8px;
+    overflow: hidden; /* Garante que as bordas arredondadas funcionem */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.students-table th, .students-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-dark);
+}
+
+.students-table th {
+    background-color: var(--background-light);
+    font-weight: bold;
+}
+
+.students-table tbody tr:hover {
+    background-color: var(--background-light);
+}
+
+/* ============================================== */
+/* BOTÕES                                         */
+/* ============================================== */
+
+.details-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.details-button:hover {
+    background-color: var(--primary-hover);
+}
+
+.remove-course-button {
+    background: none;
+    border: 1px solid var(--error-color);
+    color: var(--error-color);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 8px;
+    padding: 2px 6px;
+    transition: all 0.3s ease;
+}
+
+.remove-course-button:hover {
+    background-color: var(--error-color);
+    color: white;
+}
+
+.expand-toggle-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.expand-toggle-button:hover {
+    color: var(--primary-hover);
+    background-color: var(--background-light);
+    transform: scale(1.1);
+}
+
+.expand-toggle-button.expanded {
+    transform: rotate(45deg);
+    color: var(--error-color);
+}
+
+.pay-button {
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.pay-button:hover {
+    background-color: var(--success-hover);
+}
+
+.view-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.view-button:hover {
+    background-color: var(--primary-hover);
+}
+
+.upload-button {
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.upload-button:hover {
+    background-color: var(--success-hover);
+}
+
+/* ============================================== */
+/* MODAL GERAL                                    */
+/* ============================================== */
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--background-card);
+    border-radius: 15px;
+    width: 90vw;
+    height: 80vh;
+    position: relative;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.5s ease;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding: 15px 30px;
+    background-color: var(--primary-color);
+    color: white;
+    transition: background-color 0.5s ease;
+}
+
+.modal-header h2 {
+    color: white;
+    margin: 0;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: white;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.close-button:hover {
+    opacity: 1;
+}
+
+.modal-body {
+    display: flex;
+    height: calc(80vh - 56px); /* 80vh menos a altura do header */
+}
+
+/* ============================================== */
+/* SEÇÕES DO MODAL                                */
+/* ============================================== */
+
+.modal-body-seclef {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 70%;
+    height: 100%;
+    padding: 20px;
+}
+
+.modal-body-secrigth {
+    width: 30%;
+    padding: 0px 0px 0px 0px;
+    margin: 20px 20px 20px 0px;
+}
+
+.modal-section {
+    background-color: var(--background-card);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.5s ease;
+}
+
+.modal-info, .modal-docs, .modal-courses {
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 20px 10px 20px 0px;
+}
+
+.modal-courses{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 90%;
+}
+
+/* ============================================== */
+/* ESTILOS ESPECÍFICOS DE CONTEÚDO NO MODAL       */
+/* ============================================== */
+
+.modal-info{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    height: 80%;
+    overflow-y: scroll;
+}
+
+.modal-info-sec1 {
+    display: flex;
+}
+
+.student-photo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--background-light);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.5s ease;
+}
+
+.student-photo-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-color);
+}
+
+.student-photo-placeholder {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.student-photo-placeholder svg {
+    width: 60px;
+    height: 60px;
+    color: var(--text-dark);
+    opacity: 0.5;
+}
+
+.basic-info-card {
+    margin-left: 15px;
+    width: 80%;
+}
+
+.card-row {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+}
+
+.card-row *{
+    width: 50%;
+}
+
+.card-row strong {
+    color: var(--text-dark);
+}
+
+.courses-list-container {
+    height: 90%;
+    overflow-y: scroll;
+}
+
+.course-tag {
+    background-color: var(--background-light);
+    border-radius: 12px;
+    padding: 6px 12px;
+    margin-bottom: 8px;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.5s ease;
+}
+
+.course-tag strong{
+    font-weight: 200;
+}
+
+.add-course-section {
+    position: relative;
+    height: 10%;
+}
+
+.button-container{
+    height: 100%;
+}
+
+.button-container button{
+    background-color: var(--primary-color);
+    border: none;
+    color: white;
+    width: 100%;
+    height: 60%;
+    border-radius: 5px;
+}
+
+.available-courses-list {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 400px;
+    background-color: var(--background-card);
+    border: 1px solid var(--border-color);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2px;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.available-courses-list ul {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px;
+}
+
+.available-courses-list li {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 7px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+.available-courses-list button {
+    background-color: var(--primary-color);
+    border: none;
+    color: white;
+    width: 100%;
+    height: 20px;
+    border-radius: 5px;
+}
+
+.document-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+    gap: 10px;
+}
+
+.document-item:last-child {
+    border-bottom: none;
+}
+
+.document-item strong {
+    flex-grow: 1;
+    color: var(--text-dark);
+}
+
+.document-item .validity-status {
+    font-size: 12px;
+    color: var(--text-dark);
+    opacity: 0.7;
+    white-space: nowrap;
+}
+
+.document-item > span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+.modal-card{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.modal-docs{
+    width: 100%;
+    height: 20%;
+}

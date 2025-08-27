@@ -1,0 +1,156 @@
+/* ============================================== */
+/* Imports            */
+/* ============================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap');
+
+/* ============================================== */
+/* GLOBAIS - RESET E DEFINIÇÕES PADRÃO            */
+/* ============================================== */
+
+/* Reset básico para remover paddings e margins padrão do navegador */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ============================================== */
+/* PALETA DE CORES: MODO CLARO (Padrão)           */
+/* ============================================== */
+
+:root {
+    /* Cores Principais e de Interação */
+    --primary-color: #2A61D2;
+    --primary-hover: #3A75E0;
+    --primary-active: #1E4BB3;
+
+    --secondary-color: #613391;
+    --secondary-hover: #7A40B5;
+    --secondary-active: #4A2771;
+
+    --highlight-color: #59A6FF;
+    --highlight-hover: #75B6FF;
+    --highlight-active: #3B87D9;
+
+    /* Cores de Status e Ação */
+    --error-color: #E64A19;
+    --error-hover: #FF6F42;
+    --error-active: #C03913;
+
+    --success-color: #4CAF50;
+    --success-hover: #6BC56D;
+    --success-active: #3D8B40;
+
+    --warning-color: #FFC107;
+    --warning-hover: #FFD34E;
+    --warning-active: #D9A205;
+    
+    /* Cores de Fundo, Texto e Elementos */
+    --background-light: #F7F8FC;
+    --background-card: #FFFFFF; /* Fundo de cards, modais, etc */
+    --text-dark: #3F4756;
+    --disabled-color: #DCDCDC;
+    --border-color: #E0E0E0; /* Cor para bordas sutis */
+    --scrollbar-track-color: #A8C4E8;
+    --scrollbar-thumb-color: var(--primary-color);
+}
+
+/* ============================================== */
+/* PALETA DE CORES: MODO ESCURO (Dark Mode)       */
+/* ============================================== */
+
+:root.dark-mode {
+    /* Cores de Fundo, Texto e Elementos */
+    --background-light: #121212;
+    --background-card: #1E1E1E;
+    --text-dark: #E0E0E0;
+    --disabled-color: #3F4756;
+    --border-color: #333333;
+    --scrollbar-track-color: #333333;
+    --scrollbar-thumb-color: var(--primary-color);
+
+    /* Cores Principais e de Interação */
+    --primary-color: #3A75E0;
+    --primary-hover: #59A6FF;
+    --primary-active: #2A61D2;
+
+    --secondary-color: #7A40B5;
+    --secondary-hover: #9457E0;
+    --secondary-active: #613391;
+
+    --highlight-color: #75B6FF;
+    --highlight-hover: #94C3FF;
+    --highlight-active: #59A6FF;
+
+    /* Cores de Status e Ação */
+    --error-color: #FF6F42;
+    --error-hover: #FF8A65;
+    --error-active: #E64A19;
+    
+    --success-color: #6BC56D;
+    --success-hover: #81D183;
+    --success-active: #4CAF50;
+
+    --warning-color: #FFD34E;
+    --warning-hover: #FFE694;
+    --warning-active: #FFC107;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background-light);
+    color: var(--text-dark);
+    transition: background-color 0.5s ease, color 0.5s ease; /* Transição suave entre os modos */
+}
+
+h1, h2, .login-header h1 { /* Aplique a fonte de título aos cabeçalhos */
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+}
+
+/* Botão principal */
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--background-light);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-primary:active {
+    background-color: var(--primary-active);
+}
+
+/* Card */
+.card {
+    background-color: var(--background-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para a barra de rolagem */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-active);
+}

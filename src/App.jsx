@@ -5,7 +5,8 @@ import Login from "./components/Login"
 import RegisterStudent from './pages/RegisterStudent';
 import ManageStudents from './pages/ManageStudents';
 import Schedule from './pages/Schedule';
-import './App.css';
+import './assets/styles/globals.css';
+import './assets/styles/App.css';
 
 
 function App(){
@@ -14,7 +15,10 @@ function App(){
   const handleLogin = (success) => {
     setIsAuthenticated(success)
   }
-
+  const toggleDarkMode = () => {
+    document.body.classList.toggle('dark-mode');
+  };
+  
   const handleLogout = () => {
     setIsAuthenticated(false)
   }
@@ -25,7 +29,7 @@ function App(){
 
   return (
       <Router>
-          <Layout>
+          <Layout onLogout={handleLogout} onToggleDarkMode={toggleDarkMode}>
               <Routes>
                   {/* Rotas */}
                   <Route path='/' element={<Home />} />
