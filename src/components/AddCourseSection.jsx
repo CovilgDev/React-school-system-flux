@@ -50,6 +50,10 @@ const AddCourseSection = ({ student, onStudentUpdate }) => {
         enrolledCourses: arrayUnion(courseRef) // Adiciona a referência do curso ao array
       });
 
+      await updateDoc(courseRef, {
+          registeredStudents: arrayUnion(studentDocRef)
+      });
+
       if (onStudentUpdate) {
         onStudentUpdate();
       }

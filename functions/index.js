@@ -8,12 +8,10 @@ initializeApp();
 
 export const db = getFirestore();
 
-// Importa e re-exporta as funções do arquivo aluno.js
-// A medida que você criar novas funções em outros arquivos, importe-as aqui.
+
 export {    generateMatriculaOnCreate,
-            createMonthlyPaymentsOnCourseAdd,
+            processStudentDocument,
             createMonthlyPaymentsScheduled
 } from "./aluno.js";
 
-// Se você tiver funções de cursos, por exemplo, faria algo como:
-// export { createCourse, deleteCourse } from "./cursos.js";
+export { startAttendanceSession } from "./chamada.js";

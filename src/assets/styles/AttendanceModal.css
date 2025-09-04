@@ -1,0 +1,196 @@
+
+/* Fundo escurecido da modal */
+.attendance-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Conteúdo principal da modal */
+.attendance-modal-content {
+    background-color: #fff;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Cabeçalho da modal */
+.attendance-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.attendance-modal-header h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0;
+}
+
+/* Botão de fechar */
+.attendance-close-button {
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.2s;
+}
+
+.attendance-close-button:hover {
+    color: #000;
+}
+
+/* Corpo da modal */
+.attendance-modal-body {
+    flex-grow: 1;
+}
+
+.attendance-modal-body h3 {
+    font-size: 1.25rem;
+    color: #555;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+/* Lista de alunos */
+.attendance-list-container {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.attendance-student-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 10px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s;
+}
+
+.attendance-student-item:last-child {
+    border-bottom: none;
+}
+
+.attendance-student-item:hover {
+    background-color: #f9f9f9;
+}
+
+.attendance-student-item label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 100%;
+}
+
+.attendance-student-item input[type="checkbox"] {
+    margin-right: 15px;
+    accent-color: #007bff;
+    width: 20px;
+    height: 20px;
+}
+
+.attendance-student-item span {
+    font-size: 1rem;
+    color: #444;
+}
+
+@media print {
+    @page {
+        margin: 0;
+    }
+    /* Oculta tudo na página, exceto o conteúdo principal do modal */
+    body * {
+        visibility: hidden;
+    }
+
+    /* Torna o conteúdo do modal e seus filhos visíveis para a impressão */
+    .attendance-modal-content,
+    .attendance-modal-content * {
+        visibility: visible;
+    }
+
+    /* Ajusta o conteúdo do modal para a impressão */
+    .attendance-modal-content {
+        position: static !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: none !important;
+        overflow: visible !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 2cm !important;
+        margin: 0 !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        background-color: #fff;
+    }
+
+    /* Remove o alinhamento de centro e força o conteúdo para o topo */
+    body, html, .attendance-modal-backdrop {
+        height: auto !important;
+        align-items: flex-start !important;
+    }
+
+    .attendance-modal-header {
+        border-bottom: 2px solid #ccc;
+        margin-bottom: 15px;
+    }
+
+    .attendance-close-button,
+    .attendance-modal-body p {
+        display: none !important;
+    }
+
+    /* Estiliza a lista de alunos para a impressão */
+    .attendance-list-container {
+        border: 1px solid #ddd;
+    }
+
+    .attendance-student-item {
+        border-bottom: 1px dashed #ddd !important;
+        padding: 10px;
+    }
+
+    .attendance-student-item:last-child {
+        border-bottom: none !important;
+    }
+
+    .attendance-student-item label {
+        display: block;
+    }
+
+    .attendance-student-item input[type="checkbox"] {
+        display: none;
+    }
+
+    /* Cria o quadrado para o check */
+    .attendance-student-item::after {
+        content: "□";
+        float: right;
+        margin-left: 20px;
+        color: #666;
+        font-size: 1.5em; /* Aumentado para melhor visualização */
+        line-height: 1;
+    }
+
+    .attendance-student-item span {
+        font-weight: bold;
+    }
+}

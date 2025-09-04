@@ -1,5 +1,7 @@
 import { useState } from "react"
 import "../assets/styles/Login.css"
+import { auth } from "../firebase-config.js";
+import { signInWithEmailAndPassword } from "../firebase-config.js";
 
 const Login = ({ onLogin }) => {
   const [credentials, setCredentials] = useState({
@@ -10,36 +12,42 @@ const Login = ({ onLogin }) => {
   const [error, setError] = useState("")
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setCredentials((prev) => ({
       ...prev,
       [name]: value,
-    }))
-    // Limpa erro quando usuário começa a digitar
-    if (error) setError("")
-  }
+    }));
+    if (error) setError("");
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError("")
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
 
-    // Simulação de autenticação (substituir por lógica real)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      // Use a função signInWithEmailAndPassword do Firebase
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        credentials.email,
+        credentials.password
+      );
 
-      // Credenciais de exemplo
-      if (credentials.email === "admin@escola.com" && credentials.password === "admin123") {
-        onLogin(true)
-      } else {
-        setError("Email ou senha incorretos")
-      }
+      // Chame a função onLogin para atualizar o estado da aplicação
+      onLogin(true);
     } catch (err) {
-      setError("Erro ao fazer login. Tente novamente.")
+      // O Firebase retorna um erro com um código específico
+      let errorMessage = "Erro ao fazer login. Tente novamente.";
+      if (err.code === "auth/invalid-credential") {
+        errorMessage = "Email ou senha incorretos.";
+      } else if (err.code === "auth/user-not-found") {
+        errorMessage = "Email não encontrado.";
+      }
+      setError(errorMessage);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="login-container">
@@ -137,23 +145,13 @@ const Login = ({ onLogin }) => {
             {isLoading ? (
               <>
                 <div className="spinner"></div>
-                Entrando...
+                <span>Entrando...</span>
               </>
             ) : (
               "Entrar"
             )}
           </button>
         </form>
-
-        <div className="login-footer">
-          <p>Credenciais de teste:</p>
-          <p>
-            <strong>Email:</strong> admin@escola.com
-          </p>
-          <p>
-            <strong>Senha:</strong> admin123
-          </p>
-        </div>
       </div>
     </div>
   )

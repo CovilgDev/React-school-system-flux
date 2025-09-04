@@ -1,107 +1,151 @@
 /* ============================================== */
-/* CONTAINER E TABELA GERAL                       */
+/* CONTAINER E TABELA GERAL                      */
 /* ============================================== */
 
 .schedule-container {
     padding: 20px;
+    /* A cor de fundo geral da página pode ser definida aqui se não estiver no App.css */
+    /* background-color: var(--background-light); */
 }
 
-.schedule-table {
-    width: 100%;
-    border-collapse: collapse;
+/* ============================================== */
+/* AJUSTES NO CALENDÁRIO FULLCALENDAR            */
+/* ============================================== */
+
+/* Garante que o texto dos botões e do título da barra de ferramentas seja visível */
+.fc-toolbar-chunk h2,
+.fc-toolbar-chunk button {
+    color: var(--text-dark);
+}
+
+/* Estilos de botões da barra de ferramentas */
+.fc-toolbar-chunk button {
     background-color: var(--background-card);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-    transition: background-color 0.5s ease;
-}
-
-.schedule-table th, .schedule-table td {
     border: 1px solid var(--border-color);
-    padding: 12px;
-    text-align: center;
-    color: var(--text-dark);
-    transition: border-color 0.5s ease;
-}
-
-.schedule-table th {
-    background-color: var(--background-light);
-    font-weight: bold;
-    color: var(--text-dark);
-}
-
-.time-header {
-    width: 60px;
-}
-
-.time-cell {
-    background-color: var(--background-light);
-    font-weight: bold;
-    color: var(--text-dark);
-}
-
-/* ============================================== */
-/* CÉLULAS E CARDS DE AULA                        */
-/* ============================================== */
-
-.class-cell-wrapper {
-    position: relative;
-    min-height: 80px; /* Aumentado para melhor visualização */
-    vertical-align: top;
-    padding: 5px;
-}
-
-.class-cell {
-    background-color: var(--primary-light);
-    color: var(--text-primary);
-    border-radius: var(--border-radius-sm);
-    padding: 10px;
-    height: 100%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: background-color 0.5s ease, box-shadow 0.3s ease;
+    transition: all 0.2s ease;
     cursor: pointer;
 }
 
-.class-cell:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
+/* Estilo de hover para os botões */
+.fc-toolbar-chunk button:hover {
+    background-color: var(--background-light);
+    border-color: var(--text-dark); /* Borda fica mais visível no hover */
 }
 
-.class-info {
-    text-align: center;
-    color: var(--text-dark);
+/* Cor do texto do botão ativo (selecionado) */
+.fc-toolbar-chunk button.fc-button-active {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    border-color: var(--primary-color) !important;
 }
 
-.class-info strong {
-    font-size: 0.9em;
-    display: block;
-}
-
-.class-info small {
-    font-size: 0.8em;
-    color: var(--text-dark);
-    opacity: 0.7;
+/* Botão "Hoje" e botões de navegação */
+.fc-toolbar-chunk .fc-prev-button,
+.fc-toolbar-chunk .fc-next-button,
+.fc-toolbar-chunk .fc-today-button {
+    background-color: var(--primary-color);
+    border: 1px solid var(--border-color);
 }
 
 /* ============================================== */
-/* BOTÃO CHAMADA                                  */
+/* CLASSES CUSTOMIZADAS                          */
 /* ============================================== */
 
-.call-list-button {
+.custom-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.custom-location-select {
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    background-color: var(--background-card);
+    color: var(--text-dark);
+}
+
+.add-event-button {
     background-color: var(--primary-color);
     color: white;
     border: none;
-    padding: 5px 10px;
-    border-radius: 3px;
+    padding: 8px 12px;
+    border-radius: var(--border-radius-sm);
     cursor: pointer;
-    font-size: 0.8em;
-    margin-top: 5px;
+    font-weight: 500;
     transition: background-color 0.3s ease;
 }
 
-.call-list-button:hover {
+.add-event-button:hover {
     background-color: var(--primary-hover);
+}
+
+.schedule-container h1 {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+}
+
+/* ============================================== */
+/* ESTILOS DOS EVENTOS                           */
+/* ============================================== */
+
+.fc-event{
+    font-size: 0.8rem;
+}
+
+/* Estilos para eventos de curso (recorrentes) */
+.fc-event.course-event {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+/* Estilos para eventos únicos (pontuais) */
+.fc-event.unique-event {
+    background-color: var(--highlight-color);
+    border-color: var(--highlight-active);
+    color: var(--text-dark);
+}
+
+/* Estilos para o conteúdo interno do evento */
+.event-content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0px 15px 0px 15px;
+}
+
+.event-title {
+    font-size: 1em;
+    font-weight: 600;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Botão de Lista de Chamada */
+.attendance-button {
+    height: 70%;
+    max-height: 31px;
+    background-color: white;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    border-radius: var(--border-radius-sm);
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    pointer-events: none;
+}
+
+.fc-event:hover .attendance-button {
+    pointer-events: auto;
+}
+
+.attendance-button:hover {
+    background-color: var(--secondary-color);
+    color: white;
 }

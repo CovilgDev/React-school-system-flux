@@ -159,6 +159,11 @@ const StudentDetailsModal = ({ student, onClose, onStudentUpdate }) => {
             await updateDoc(studentDocRef, {
                 enrolledCourses: arrayRemove(courseRefToRemove)
             });
+
+            await updateDoc(courseRefToRemove, {
+                registeredStudents: arrayRemove(studentDocRef)
+            });
+
             if (onStudentUpdate) {
                 onStudentUpdate();
             }
@@ -313,51 +318,52 @@ const StudentDetailsModal = ({ student, onClose, onStudentUpdate }) => {
                             </div>
                         </div>
                         <div className="modal-docs">
-                            <h3>Documentos:</h3>
-                            <div className="document-item">
-                                <strong>Autorização de Imagem:</strong>
-                                {student.documents?.imageAuthorization && student.documents.imageAuthorization.url ? (
-                                    <>
-                                        <span>{student.documents.imageAuthorization.fileName}</span>
+                          <h3>Documentos:</h3>
+                          {student.documents &&
+                            Object.keys(student.documents)
+                              .filter(docKey => docKey !== 'photo') // Filtra a chave 'photo'
+                              .map(docKey => {
+                                const docInfo = student.documents[docKey];
+
+                                // Mapeamento de chaves do Firestore para nomes traduzidos
+                                const documentNames = {
+                                  'Proofofresidence': 'Comprovante de Residência',
+                                  'RG': 'RG',
+                                  'cpf': 'CPF',
+                                  'imageAuthorization': 'Autorização de Uso de Imagem',
+                                  'medicalRelease': 'Liberação Médica',
+                                  'Birthcertificate': 'Certidão de Nascimento',
+                                  'Proofofeducation': 'Comprovante de Escolaridade',
+                                };
+
+                                // Usa o nome traduzido do mapeamento, ou a chave formatada como fallback
+                                const formattedName = documentNames[docKey] || docKey.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                            
+                                return (
+                                  <div key={docKey} className="document-item">
+                                    <strong>{formattedName}:</strong>
+                                    {docInfo && docInfo.url ? (
+                                      <>
+                                        <span>{docInfo.fileName || 'Documento carregado'}</span>
                                         <span className="validity-status">
-                                            {student.documents.imageAuthorization.hasExpiration ? 
-                                                `Válido até: ${student.documents.imageAuthorization.expirationDate}` : 
-                                                "Sem validade"
-                                            }
+                                          {docInfo.hasExpiration ? 
+                                            `Válido até: ${docInfo.expirationDate || 'N/A'}` : 
+                                            "Sem validade"
+                                          }
                                         </span>
-                                        <button className="view-button" onClick={() => window.open(student.documents.imageAuthorization.url, '_blank')}>Visualizar</button>
-                                    </>
-                                ) : (
-                                    <button 
+                                        <button className="view-button" onClick={() => window.open(docInfo.url, '_blank')}>Visualizar</button>
+                                      </>
+                                    ) : (
+                                      <button 
                                         className="upload-button"
-                                        onClick={(e) => handleUpload(e, 'imageAuthorization')}
-                                    >
+                                        onClick={(e) => handleUpload(e, docKey)}
+                                      >
                                         Fazer Upload
-                                    </button>
-                                )}
-                            </div>
-                            <div className="document-item">
-                                <strong>Liberação Médica:</strong>
-                                {student.documents?.medicalRelease && student.documents.medicalRelease.url ? (
-                                    <>
-                                        <span>{student.documents.medicalRelease.fileName}</span>
-                                        <span className="validity-status">
-                                            {student.documents.medicalRelease.hasExpiration ? 
-                                                `Válido até: ${student.documents.medicalRelease.expirationDate}` : 
-                                                "Sem validade"
-                                            }
-                                        </span>
-                                        <button className="view-button" onClick={() => window.open(student.documents.medicalRelease.url, '_blank')}>Visualizar</button>
-                                    </>
-                                ) : (
-                                    <button 
-                                        className="upload-button"
-                                        onClick={(e) => handleUpload(e, 'medicalRelease')}
-                                    >
-                                        Fazer Upload
-                                    </button>
-                                )}
-                            </div>
+                                      </button>
+                                    )}
+                                  </div>
+                                );
+                              })}
                         </div>
                     </div>
 

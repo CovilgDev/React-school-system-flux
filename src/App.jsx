@@ -1,30 +1,58 @@
-import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { signOut, onAuthStateChanged, auth } from './firebase-config.js';
+
+// Componentes da página principal
 import Layout from './components/Layout';
 import Login from "./components/Login"
 import RegisterStudent from './pages/RegisterStudent';
 import ManageStudents from './pages/ManageStudents';
 import Schedule from './pages/Schedule';
+
+// Seus arquivos CSS
 import './assets/styles/globals.css';
 import './assets/styles/App.css';
 
 
 function App(){
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  //const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-  const handleLogin = (success) => {
-    setIsAuthenticated(success)
-  }
+  // Efeito para gerenciar o estado de autenticação
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const toggleDarkMode = () => {
-    document.body.classList.toggle('dark-mode');
+    document.documentElement.classList.toggle('dark-mode');
   };
   
-  const handleLogout = () => {
-    setIsAuthenticated(false)
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+    }
+  };
+
+  // Renderiza a tela de carregamento enquanto o status de autenticação é verificado
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
+        <p>Carregando...</p>
+      </div>
+    );
   }
 
-  if (!isAuthenticated) {
-    return <Login onLogin={handleLogin} />
+  // Se o usuário não estiver autenticado, exibe a página de login
+  if (!user) {
+    return <Login />;
   }
 
   return (

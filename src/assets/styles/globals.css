@@ -33,6 +33,8 @@
     --highlight-hover: #75B6FF;
     --highlight-active: #3B87D9;
 
+    --box-shadow: 0 4px 6px rgba(63, 71, 86, 0.1);
+
     /* Cores de Status e Ação */
     --error-color: #E64A19;
     --error-hover: #FF6F42;
@@ -54,6 +56,7 @@
     --border-color: #E0E0E0; /* Cor para bordas sutis */
     --scrollbar-track-color: #A8C4E8;
     --scrollbar-thumb-color: var(--primary-color);
+    --border-radius-sm: 4px;
 }
 
 /* ============================================== */
@@ -69,6 +72,7 @@
     --border-color: #333333;
     --scrollbar-track-color: #333333;
     --scrollbar-thumb-color: var(--primary-color);
+    --box-shadow: 0 4px 6px rgba(89, 166, 255, 0.2);
 
     /* Cores Principais e de Interação */
     --primary-color: #3A75E0;
