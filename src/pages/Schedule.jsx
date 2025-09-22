@@ -22,13 +22,14 @@ import '../assets/styles/Schedule.css';
 const startAttendanceSession = httpsCallable(functions, 'startAttendanceSession');
 
 const Schedule = () => {
-    const [allEvents, setAllEvents] = useState([]); // Novo estado para todos os eventos
-    const [events, setEvents] = useState([]); // Estado para os eventos filtrados
+    const [allEvents, setAllEvents] = useState([]);
+    const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const calendarRef = useRef(null);
     const [rooms, setRooms] = useState([]);
     const [selectedRoom, setSelectedRoom] = useState('');
+    const [fullCalendarKey, setFullCalendarKey] = useState(0);
     const [isAttendanceModalOpen, setIsAttendanceModalOpen] = useState(false);
     const [currentCallRecordId, setCurrentCallRecordId] = useState(null);
 
@@ -150,15 +151,20 @@ const Schedule = () => {
 
     // useEffect para filtrar os eventos sempre que o 'selectedRoom' ou 'allEvents' mudar
     useEffect(() => {
+        console.log("Evento que está sendo filtrado:", allEvents);
         if (selectedRoom) {
             // Filtra os eventos para mostrar apenas os da sala selecionada
-            const filteredEvents = allEvents.filter(event => 
-                event.extendedProps.roomId === selectedRoom
-            );
+            const filteredEvents = allEvents.filter(event => {
+                //event.extendedProps.roomId === selectedRoom
+                console.log(`Verificando evento: ${event.title}, RoomId: ${event.extendedProps?.roomId}`);
+                return event.extendedProps && event.extendedProps.roomId === selectedRoom;
+            });
             setEvents(filteredEvents);
+            setFullCalendarKey(prevKey => prevKey + 1);
         } else {
             // Se "Todas as Salas" estiver selecionado, exibe todos os eventos
             setEvents(allEvents);
+            setFullCalendarKey(prevKey => prevKey + 1);
         }
     }, [selectedRoom, allEvents]);
 
@@ -259,6 +265,7 @@ const Schedule = () => {
             </div>
             
             <FullCalendar
+                key={fullCalendarKey}
                 ref={calendarRef}
                 plugins={[ dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin ]}
                 initialView="timeGridWeek"
@@ -270,7 +277,7 @@ const Schedule = () => {
                 }}
                 customButtons={{}}
                 viewDidMount={null}
-                events={events} // Agora passa a lista de eventos FILTRADA
+                events={events}
                 eventDisplay="block"
                 eventContent={handleEventContent}
                 eventTimeFormat={{
@@ -291,6 +298,12 @@ const Schedule = () => {
                 isOpen={isAttendanceModalOpen}
                 onClose={() => setIsAttendanceModalOpen(false)}
                 callRecordId={currentCallRecordId}
+            />
+
+            <AddEventModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                onSave={handleSaveEvent}
             />
         </div>
     );

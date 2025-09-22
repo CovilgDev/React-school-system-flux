@@ -130,7 +130,7 @@ export const processStudentDocument = onDocumentWritten({
 
                 // Lógica para criar documento médico
                 const sportsRequiringMedicalRelease = [
-                    "PILATES", "DANÇA MIX", "JIU JITSU (4 A 11 ANOS)", "JIU JITSU (+12 ANOS)", "Muay Thai", "TAEKWONDO WTF"
+                    "PILATES", "JUMP MIX", "JIU JITSU (4 A 11 ANOS)", "JIU JITSU (+12 ANOS)", "Muay Thai", "TAEKWONDO WTF", "CAPOTERAPIA (CAPOEIRA)"
                 ];
                 
                 const courseDoc = await db.doc(`courses/${courseId}`).get();

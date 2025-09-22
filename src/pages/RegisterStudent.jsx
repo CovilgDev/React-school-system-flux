@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { addDoc, collection, db } from '../firebase-config';
 import '../assets/styles/RegisterStudent.css';
+import SimpleMessageModal from '../components/SimpleMessageModal'; 
 
 // Função auxiliar para atualizar objetos aninhados
 const updateNestedObject = (obj, path, val) => {
@@ -97,6 +98,11 @@ const RegisterStudent = () =>{
     
     // Estado para controlar se a seção de responsável é exibida
     const [showResponsibleInfo, setShowResponsibleInfo] = useState(false);
+
+    // Para fechar o modal
+    const handleCloseModal = () => {
+        setMessage('');
+    };
 
     // FUNÇÃO PARA LIDAR COM A MUDANÇA NO RADIO BUTTON 'MENOR DE IDADE'
     const handleMinorChange = (e) => {
@@ -672,7 +678,10 @@ const RegisterStudent = () =>{
                 {/* ========================================= */}
                 <button className="btn-submit" type="submit">Cadastrar Aluno</button>
             </form>
-            {message && <p className="message">{message}</p>}
+            <SimpleMessageModal
+              message={message}
+              onClose={handleCloseModal}
+            />
         </div>
     );
     

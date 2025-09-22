@@ -127,7 +127,12 @@ const StudentDetailsModal = ({ student, onClose, onStudentUpdate }) => {
                     };
 
                 } else { // Lógica para a foto do aluno
-                    docData = downloadURL; // Salva a URL diretamente
+                    docData = {
+                    url: downloadURL,
+                    fileName: file.name, // Salva o nome do arquivo para referência
+                    hasExpiration: false, // Define explicitamente que não tem validade
+                    expirationDate: null
+                };
                 }
 
                 // Atualiza o documento do aluno no Firestore
