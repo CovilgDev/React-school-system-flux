@@ -191,7 +191,7 @@
 .modal-content {
     background-color: var(--background-card);
     border-radius: 15px;
-    width: 90vw;
+    width: 80vw;
     height: 80vh;
     position: relative;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
@@ -244,7 +244,7 @@
     gap: 15px;
     width: 70%;
     height: 100%;
-    padding: 20px;
+    padding: 15px 5px;
 }
 
 .modal-body-secrigth {
@@ -264,7 +264,7 @@
 .modal-info, .modal-docs, .modal-courses {
     overflow-y: auto;
     box-sizing: border-box;
-    padding: 20px 10px 20px 0px;
+    padding: 20px 10px 20px 10px;
 }
 
 .modal-courses{
